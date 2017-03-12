@@ -20,7 +20,8 @@ function signInToOneDrive() {
 function onAuthCallback() {
   var authInfo = getAuthInfoFromUrl();
   var token = authInfo["access_token"];
-  console.log(token);
+  var expires = authInfo["expires_in"];
+  console.log(expires);
 }
 
 function getAuthInfoFromUrl() {
