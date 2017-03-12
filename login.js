@@ -3,7 +3,7 @@ function signInToOneDrive() {
   // and set the "clientId" and "redirectUri" variables accordingly.
   var appInfo = {
     "clientId": "7c74f427-22d1-4f94-8d18-708909b47890",
-    "redirectUri": "https://www.arthurrahman.github.io/oDriveCallback.html",
+    "redirectUri": "https://arthurrahman.github.io/oDriveCallback.html",
     "scopes": "user.read files.read files.read.all sites.read.all files.readwrite.all",
     "authServiceUri": "https://login.microsoftonline.com/common/oauth2/v2.0/authorize"
   }
