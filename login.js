@@ -34,5 +34,5 @@ function getAuthInfoFromUrl() {
   }
   else {
     alert("failed to receive auth token");
-  }
+  } 
 }
