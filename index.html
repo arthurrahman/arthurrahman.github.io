@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <title>MS DRIVE</title>
+    <Link rel="stylesheet" href="lib/css/bootstrap.min.css">
+
+    <style>
+        .navbar-default .navbar-nav>li>a:hover,
+        .navbar-default .navbar-nav>li>a:focus {
+            background-color: lightgray;
+            color: dimgray;
+        }
+        
+        body {
+            padding-top: 50px;
+        }
+    </style>
+
+</head>
+
+<body>
+
+    <nav class="navbar navbar-default navbar-fixed-top">
+        <div class="container">
+            <div class="navbar-header">
+                <button class="navbar-toggle collapsed" aria-expanded="false" aria-controls="navbar" type="button" data-toggle="collapse"
+                    data-target="#navbar">
+                            <span class="sr-only">Toggle navigation</span>
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                        </button>
+                <a class="navbar-brand" href="#">MS Drive Web App</a>
+            </div>
+            <div class="navbar-collapse collapse" id="navbar">
+                <ul class="nav navbar-nav">
+                    <li class="active"><a href="#">Home</a></li>
+                    <li><a href="#about">About</a></li>
+                    <li><a href="#contact">Contact</a></li>
+
+                </ul>
+                <div class="navbar-form navbar-right">
+                    <button type="submit" class="btn btn-default" onclick="login()">Login</button>
+                </div>
+            </div>
+            <!--/.nav-collapse -->
+        </div>
+    </nav>
+
+    <div class="container" id="main-content">
+        <div class="row" style="text-align: center">
+            <div class="page-header" id="index-page-header">
+                <h3>Welcome to MS One Drive Home</h3>
+                <h5><small>Please sign in to use MS One Drive app</small></h5>
+            </div>
+            <img src="img/msonedrive.jpg" alt="msonedrivelogo">
+        </div>
+    </div>
+
+
+
+
+    <script src="lib/jquery/jquery.min.js"></script>
+    <script src="lib/js/bootstrap.min.js"></script>
+    <script src="login.js"></script>
+
+    <script>
+        function saveCookie() {
+            console.log("we are here");
+            var d = new Date();
+            d.setTime(d.getTime() + (30 * 1000));
+            var expires = "expires=" + d.toUTCString();
+            document.cookie = "name=arthur;" + expires + ";path=/";
+        }
+
+        function login() {
+            var appInfo = {
+                "clientId": "7c74f427-22d1-4f94-8d18-708909b47890",
+                "redirectUri": "http://rahman.com:8080/oDriveCallback.html",
+                "scopes": "user.read files.read files.read.all sites.read.all",
+                "authServiceUri": "https://login.microsoftonline.com/common/oauth2/v2.0/authorize"
+            }
+            var url =
+                appInfo.authServiceUri +
+                "?client_id=" + appInfo.clientId +
+                "&response_type=token" +
+                "&redirect_uri=" + encodeURIComponent(appInfo.redirectUri);
+
+            if (appInfo.scopes)
+                url = url + "&scope=" + encodeURIComponent(appInfo.scopes);
+            console.log(url);
+            popup(url);
+        }
+
+        function popup(url) {
+            var width = 525,
+                height = 525,
+                screenX = window.screenX,
+                screenY = window.screenY,
+                outerWidth = window.outerWidth,
+                outerHeight = window.outerHeight;
+
+            var left = screenX + Math.max(outerWidth - width, 0) / 2;
+            var top = screenY + Math.max(outerHeight - height, 0) / 2;
+
+            var features = [
+                "width=" + width,
+                "height=" + height,
+                "top=" + top,
+                "left=" + left,
+                "status=no",
+                "resizable=yes",
+                "toolbar=no",
+                "menubar=no",
+                "scrollbars=yes"];
+            var popup = window.open(url, "oauth", features.join(","));
+            if (!popup) {
+                alert("failed to pop up auth window");
+            }
+
+            popup.focus();
+        }
+    </script>
+</body>
+
+</html>
