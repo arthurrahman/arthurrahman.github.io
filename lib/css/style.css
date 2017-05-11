@@ -1,0 +1,24 @@
+.navbar-default .navbar-nav>li>a:hover,
+.navbar-default .navbar-nav>li>a:focus,
+.navbar-inverse .navbar-nav>li>a:hover,
+.navbar-inverse .navbar-nav>li>a:focus {
+    background-color: #02143B;
+    color: white;
+}
+#loginButton>a {
+    color: white;
+}
+#loginButton>a:hover {
+    background-color: white;
+    color: black;
+}
+
+body {
+    padding-top: 40px;
+}
+#loginUsername {
+    color: white;
+}
+#loginNav {
+    display: none;
+}

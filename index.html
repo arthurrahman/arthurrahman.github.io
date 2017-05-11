@@ -5,20 +5,7 @@
     <meta charset="utf-8" />
     <title>MS DRIVE</title>
     <Link rel="stylesheet" href="lib/css/bootstrap.min.css">
-
-    <style>
-        .navbar-default .navbar-nav>li>a:hover,
-        .navbar-default .navbar-nav>li>a:focus,
-        .navbar-inverse .navbar-nav>li>a:hover,
-        .navbar-inverse .navbar-nav>li>a:focus {
-            background-color: #02143B;
-            color: white;
-        }
-        
-        body {
-            padding-top: 40px;
-        }
-    </style>
+    <Link rel="stylesheet" href="lib/css/style.css">
 </head>
 
 <body>
@@ -32,111 +19,148 @@
                             <span class="icon-bar"></span>
                             <span class="icon-bar"></span>
                             <span class="icon-bar"></span>
-                        </button>
+                </button>
                 <a class="navbar-brand" href="#">MS OneDrive App</a>
             </div>
             <div class="navbar-collapse collapse" id="navbar">
                 <ul class="nav navbar-nav">
-                    <li class="active"><a href="#">Home</a></li>
-                    <li><a href="#about">Browse</a></li>
+                    <li class="active"><a href="index.html">Home</a></li>
+                    <li><a href="browse.html">Browse</a></li>
                     <li><a href="#contact">Add/Delete Files</a></li>
-
                 </ul>
-                <div class="navbar-form navbar-right" id="loginButton">
-                    <button type="submit" class="btn btn-default" onclick="login()">Login OneDrive</button>
-                </div>
+                <ul class="nav navbar-nav navbar-right">
+                    <li id="loginButton"><a href="#" onclick="login()">Login OneDrive</a></li>
+                    <li id="loginNav" class="dropdown">
+                        <a id="loginUsername" class="dropdown-toggle" data-toggle="dropdown" href="#"></b>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a href="#" id="logoutButton" onclick="deleteCookie()"><span class="glyphicon glyphicon-off"> </span> LOGOUT</a></li>
+                        </ul>
+                    </li>
+                </ul>
             </div>
             <!--/.nav-collapse -->
         </div>
     </nav>
-
     <div class="container" id="main-content">
-        <div class="row" style="text-align: center">
-            <div class="page-header" id="index-page-header" s>
-                <h3 id="content-header"><b>Welcome to MS One Drive Home</b></h3>
+        <div class="row">
+            <div style="text-align: center" class="page-header" id="index-page-header" s>
+                <h3 style="color: darkblue" id="content-header"><b>Welcome to MS One Drive Home</b></h3>
             </div>
-            <div>
-                <img width="1000px" src="img/msonedrive.jpg" alt="msonedrivelogo">
-            </div>
+            <div id="contentBody" style="text-align: center">
+                <img id="mainLogo" width="1000px" src="img/msonedrive.jpg" alt="msonedrivelogo">
 
+                <div class="panel panel-default" id="m-content-data2" style="display:none">
+                    <div class="panel-heading">
+                        <h4><b>Drive Information</b></h4>
+                    </div>
+                    <div class="panel-body">
+                        <div style="width:500px">
+                            <dl class="dl-horizontal" id="driveInfo">
+
+                            </dl>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 
-
-
-
-    <script src="lib/jquery/jquery.min.js"></script>
-    <script src="lib/js/bootstrap.min.js"></script>
-    <script src="display.js"></script>
-    <script src="login.js"></script>
+    <script type="text/javascript" src="lib/jquery/jquery.min.js"></script>
+    <script type="text/javascript" src="lib/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="display.js"></script>
+    <script type="text/javascript" src="data.js"></script>
+    <script type="text/javascript" src="parser.js"></script>
 
     <script>
-        function saveCookie() {
-            console.log("we are here");
-            var d = new Date();
-            d.setTime(d.getTime() + (30 * 1000));
-            var expires = "expires=" + d.toUTCString();
-            document.cookie = "name=arthur;" + expires + ";path=/";
-        }
+                                                                       $(document).ready(function () {
+                                                                           var token = getCookie("oDriveToken");
+                                                                           console.log(token);
+                                                                           if (token != "") {
+                                                                               $("#loginButton").hide();
+                                                                               $("#mainLogo").css("display", "none");
+                                                                               getDriveData(token);
+                                                                               //getDriveHomeData(token);
+                                                                           }
+                                                                       });
 
-        function login() {
-            var appInfo = {
-                "clientId": "7c74f427-22d1-4f94-8d18-708909b47890",
-                "redirectUri": "http://localhost:8080/oDriveCallback.html",
-                "scopes": "user.read files.read files.read.all sites.read.all",
-                "authServiceUri": "https://login.microsoftonline.com/common/oauth2/v2.0/authorize"
-            }
-            var url =
-                appInfo.authServiceUri +
-                "?client_id=" + appInfo.clientId +
-                "&response_type=token" +
-                "&redirect_uri=" + encodeURIComponent(appInfo.redirectUri);
+                                                                       function getCookie(cname) {
+                                                                           var name = cname + "=";
+                                                                           var decodedCookie = decodeURIComponent(document.cookie);
+                                                                           var ca = decodedCookie.split(';');
+                                                                           var ca = decodedCookie.split(';');
+                                                                           for (var i = 0; i < ca.length; i++) {
+                                                                               var c = ca[i];
+                                                                               while (c.charAt(0) == ' ') {
+                                                                                   c = c.substring(1);
+                                                                               }
+                                                                               if (c.indexOf(name) == 0) {
+                                                                                   return c.substring(name.length, c.length);
+                                                                               }
+                                                                           }
+                                                                           return "";
+                                                                       }
 
-            if (appInfo.scopes)
-                url = url + "&scope=" + encodeURIComponent(appInfo.scopes);
-            console.log(url);
-            popup(url);
-        }
+                                                                       function login() {
+                                                                           var appInfo = {
+                                                                               "clientId": "7c74f427-22d1-4f94-8d18-708909b47890",
+                                                                               "redirectUri": "http://localhost:8080/oDriveCallback.html",
+                                                                               "scopes": "user.read files.read files.read.all sites.read.all",
+                                                                               "authServiceUri": "https://login.microsoftonline.com/common/oauth2/v2.0/authorize"
+                                                                           }
+                                                                           var url =
+                                                                               appInfo.authServiceUri +
+                                                                               "?client_id=" + appInfo.clientId +
+                                                                               "&response_type=token" +
+                                                                               "&redirect_uri=" + encodeURIComponent(appInfo.redirectUri);
 
-        function popup(url) {
-            var width = 525,
-                height = 525,
-                screenX = window.screenX,
-                screenY = window.screenY,
-                outerWidth = window.outerWidth,
-                outerHeight = window.outerHeight;
+                                                                           if (appInfo.scopes)
+                                                                               url = url + "&scope=" + encodeURIComponent(appInfo.scopes);
+                                                                           console.log(url);
+                                                                           popup(url);
+                                                                       }
 
-            var left = screenX + Math.max(outerWidth - width, 0) / 2;
-            var top = screenY + Math.max(outerHeight - height, 0) / 2;
+                                                                       function popup(url) {
+                                                                           var width = 525,
+                                                                               height = 525,
+                                                                               screenX = window.screenX,
+                                                                               screenY = window.screenY,
+                                                                               outerWidth = window.outerWidth,
+                                                                               outerHeight = window.outerHeight;
 
-            var features = [
-                "width=" + width,
-                "height=" + height,
-                "top=" + top,
-                "left=" + left,
-                "status=no",
-                "resizable=yes",
-                "toolbar=no",
-                "menubar=no",
-                "scrollbars=yes"];
-            var popup = window.open(url, "oauth", features.join(","));
-            if (!popup) {
-                alert("failed to pop up auth window");
-            }
+                                                                           var left = screenX + Math.max(outerWidth - width, 0) / 2;
+                                                                           var top = screenY + Math.max(outerHeight - height, 0) / 2;
 
-            popup.focus();
-        }
+                                                                           var features = [
+                                                                               "width=" + width,
+                                                                               "height=" + height,
+                                                                               "top=" + top,
+                                                                               "left=" + left,
+                                                                               "status=no",
+                                                                               "resizable=yes",
+                                                                               "toolbar=no",
+                                                                               "menubar=no",
+                                                                               "scrollbars=yes"];
+                                                                           var popup = window.open(url, "oauth", features.join(","));
+                                                                           if (!popup) {
+                                                                               alert("failed to pop up auth window");
+                                                                           }
 
-        function onAuthenticated(token, window) {
-            console.log("the token is = ");
-            console.log(token);
-            if (token) {
-                if (window) {
-                    removeLoginButton();
-                    window.close();
-                }
-            }
-        }
+                                                                           popup.focus();
+                                                                       }
+
+                                                                       function onAuthenticated(token, window) {
+                                                                           console.log("the token is = ");
+                                                                           console.log(token);
+                                                                           if (token) {
+                                                                               if (window) {
+                                                                                   removeLoginButton();
+                                                                                   window.close();
+                                                                               }
+                                                                           }
+                                                                           $("#loginButton").hide();
+                                                                           getDriveData(token);
+                                                                       }
     </script>
 </body>
 

@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta charset="utf-8" />
+    <title>MS DRIVE</title>
+    <Link rel="stylesheet" href="lib/css/bootstrap.min.css">
+    <Link rel="stylesheet" href="lib/css/style.css">
+</head>
+
+<body>
+
+    <nav class="navbar navbar-inverse navbar-fixed-top">
+        <div class="container">
+            <div class="navbar-header">
+                <button class="navbar-toggle collapsed" aria-expanded="false" aria-controls="navbar" type="button" data-toggle="collapse"
+                    data-target="#navbar">
+                            <span class="sr-only">Toggle navigation</span>
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="#">MS OneDrive App</a>
+            </div>
+            <div class="navbar-collapse collapse" id="navbar">
+                <ul class="nav navbar-nav">
+                    <li><a href="index.html">Home</a></li>
+                    <li class="active"><a href="browse.html">Browse</a></li>
+                    <li><a href="#contact">Add/Delete Files</a></li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <li id="loginButton"><a href="#" onclick="login()">Login OneDrive</a></li>
+                    <li id="loginNav" class="dropdown">
+                        <a id="loginUsername" class="dropdown-toggle" data-toggle="dropdown" href="#"></b>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a href="#" id="logoutButton" onclick="deleteCookie()"><span class="glyphicon glyphicon-off"> </span> LOGOUT</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+            <!--/.nav-collapse -->
+        </div>
+    </nav>
+
+    <div class="container" id="main-content">
+        <div class="row">
+            <div id="contentBody" style="text-align: center">
+                <img id="mainLogo" width="1000px" src="img/msonedrive.jpg" alt="msonedrivelogo">
+
+                <div class="panel panel-default" id="m-content-data2" style="display:none">
+                    <div class="panel-heading" style="height:60px ">
+                        <h4>
+                            <b>
+                                    <ol class="breadcrumb" id="drivePathHeader">
+                                        
+                                    </ol> 
+                            </b>
+                        </h4>
+                    </div>
+                    <div class="panel-body">
+
+                        <div class="col-md-12">
+                            <div class="panel panel-default">
+                                <!-- Default panel contents -->
+
+                                <div class="panel-body">
+
+                                    <div class="btn-group" role="group" aria-label="...">
+                                        <button class="btn btn-default" data-toggle="modal" data-target="#myModal">
+						<span class="glyphicon glyphicon-plus"> </span> New Folder
+					</button>
+                                        <button class="btn btn-default" data-toggle="modal" data-target="#myModal2">
+						<span class="glyphicon glyphicon-cloud-upload"> </span> Upload
+					</button>
+                                    </div>
+
+                                    <!-- Modal -->
+                                    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+                                        <div class="modal-dialog modal-sm" role="document">
+                                            <div class="modal-content">
+                                                <div class="modal-body">
+                                                    <form>
+                                                        <div class="form-group" style="text-align:center">
+                                                            <label for="email"><h4>Folder</h4></label> <input placeholder="Enter Folder Name"
+                                                                type="text" class="form-control" id="email">
+                                                        </div>
+                                                        <button type="button" class="btn btn-default btn-block">Create</button>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <br> <br>
+
+                                    <!-- Table -->
+                                    <table class="table table-hover table-bordered" id="oneDriveTable">
+                                        <tr>
+                                            <th>Name</th>
+                                            <th>Subfolders</th>
+                                            <th>Created</th>
+                                            <th>Created by</th>
+                                            <th width="50px"></th>
+                                        </tr>
+                                        
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script type="text/javascript" src="lib/jquery/jquery.min.js"></script>
+    <script type="text/javascript" src="lib/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="display.js"></script>
+    <script type="text/javascript" src="data.js"></script>
+    <script type="text/javascript" src="parser.js"></script>
+
+    <script>
+                                                                                        $(document).ready(function () {
+                                                                                            var token = getCookie("oDriveToken");
+
+                                                                                            if (token != "") {
+                                                                                                console.log(token);
+                                                                                                $("#loginButton").hide();
+                                                                                                $("#mainLogo").css("display", "none");
+                                                                                                getDriveData2(token);
+                                                                                            }
+                                                                                        });
+
+                                                                                        function getCookie(cname) {
+                                                                                            var name = cname + "=";
+                                                                                            var decodedCookie = decodeURIComponent(document.cookie);
+                                                                                            var ca = decodedCookie.split(';');
+                                                                                            var ca = decodedCookie.split(';');
+                                                                                            for (var i = 0; i < ca.length; i++) {
+                                                                                                var c = ca[i];
+                                                                                                while (c.charAt(0) == ' ') {
+                                                                                                    c = c.substring(1);
+                                                                                                }
+                                                                                                if (c.indexOf(name) == 0) {
+                                                                                                    return c.substring(name.length, c.length);
+                                                                                                }
+                                                                                            }
+                                                                                            return "";
+                                                                                        }
+
+                                                                                        function gotoPath(path, name) {
+                                                                                            console.log("the name is = "+name);
+                                                                                            getDriveFolderStructureData2(getCookie("oDriveToken"), path);
+                                                                                            setBreadcrumbHeader(path, name);
+                                                                                        }
+
+                                                                                        function gotoPath2(path, name, element) {
+                                                                                            console.log("the name is = "+name);
+                                                                                            getDriveFolderStructureData2(getCookie("oDriveToken"), path);
+                                                                                            setBreadcrumbHeader2(path, name, element);
+                                                                                        }
+
+                                                                                        function login() {
+                                                                                            var appInfo = {
+                                                                                                "clientId": "7c74f427-22d1-4f94-8d18-708909b47890",
+                                                                                                "redirectUri": "http://localhost:8080/oDriveCallback.html",
+                                                                                                "scopes": "user.read files.read files.read.all sites.read.all",
+                                                                                                "authServiceUri": "https://login.microsoftonline.com/common/oauth2/v2.0/authorize"
+                                                                                            }
+                                                                                            var url =
+                                                                                                appInfo.authServiceUri +
+                                                                                                "?client_id=" + appInfo.clientId +
+                                                                                                "&response_type=token" +
+                                                                                                "&redirect_uri=" + encodeURIComponent(appInfo.redirectUri);
+
+                                                                                            if (appInfo.scopes)
+                                                                                                url = url + "&scope=" + encodeURIComponent(appInfo.scopes);
+                                                                                            console.log(url);
+                                                                                            popup(url);
+                                                                                        }
+
+                                                                                        function popup(url) {
+                                                                                            var width = 525,
+                                                                                                height = 525,
+                                                                                                screenX = window.screenX,
+                                                                                                screenY = window.screenY,
+                                                                                                outerWidth = window.outerWidth,
+                                                                                                outerHeight = window.outerHeight;
+
+                                                                                            var left = screenX + Math.max(outerWidth - width, 0) / 2;
+                                                                                            var top = screenY + Math.max(outerHeight - height, 0) / 2;
+
+                                                                                            var features = [
+                                                                                                "width=" + width,
+                                                                                                "height=" + height,
+                                                                                                "top=" + top,
+                                                                                                "left=" + left,
+                                                                                                "status=no",
+                                                                                                "resizable=yes",
+                                                                                                "toolbar=no",
+                                                                                                "menubar=no",
+                                                                                                "scrollbars=yes"];
+                                                                                            var popup = window.open(url, "oauth", features.join(","));
+                                                                                            if (!popup) {
+                                                                                                alert("failed to pop up auth window");
+                                                                                            }
+
+                                                                                            popup.focus();
+                                                                                        }
+
+                                                                                        function onAuthenticated(token, window) {
+                                                                                            console.log("the token is = ");
+                                                                                            console.log(token);
+                                                                                            if (token) {
+                                                                                                if (window) {
+                                                                                                    removeLoginButton();
+                                                                                                    window.close();
+                                                                                                }
+                                                                                            }
+                                                                                            $("#loginButton").hide();
+                                                                                            getDriveData(token);
+                                                                                        }
+    </script>
+</body>
+
+</html>
