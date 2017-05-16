@@ -55,7 +55,12 @@ function getPercentage(num1, num2) {
 }
 
 function setBreadcrumbHeader(path, name) {
-    var olObj = '<li class="active"><a onClick="gotoPath2(\'/drive'+path+'\',\''+name+ '\', this.parentNode )">'+name+'</a></li>';
+    var olObj ="";
+    if(name =="Home")
+        olObj = '<li class="active"><a style="cursor: pointer;" onClick="gotoPath2(\'/drive'+path+'\',\''+name+ '\', this.parentNode )">'+name+'</a></li>';
+    else
+        olObj = '<li class="active"><a style="cursor: pointer;" onClick="gotoPath2(\''+path+'\',\''+name+ '\', this.parentNode )">'+name+'</a></li>';
+        
     $('#drivePathHeader').append(olObj);
 }
 
@@ -68,11 +73,9 @@ function setBreadcrumbHeader2(path, name, element) {
         console.log("the text right now is = "+items[i].innerText);
     }
     counter +=1;
-    console.log(name);
-    console.log("the i counter is= "+i+", and counter is = "+counter);
+
     // delete li elements
     $("#drivePathHeader li").slice(counter).remove();
-
     var liObj = '<li class="active"><a onClick="gotoPath2(\''+path+'\',\''+name+ '\')">'+name+'</a></li>';
     //$('#drivePathHeader').append(liObj);
 }

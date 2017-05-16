@@ -67,7 +67,7 @@
                                 <div class="panel-body">
 
                                     <div class="btn-group" role="group" aria-label="...">
-                                        <button class="btn btn-default" data-toggle="modal" data-target="#myModal">
+                                        <button class="btn btn-default" data-toggle="modal" data-target="#newFolderModal">
 						<span class="glyphicon glyphicon-plus"> </span> New Folder
 					</button>
                                         <button class="btn btn-default" data-toggle="modal" data-target="#myModal2">
@@ -76,16 +76,17 @@
                                     </div>
 
                                     <!-- Modal -->
-                                    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+                                    <div class="modal fade" id="newFolderModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
                                         <div class="modal-dialog modal-sm" role="document">
                                             <div class="modal-content">
                                                 <div class="modal-body">
                                                     <form>
                                                         <div class="form-group" style="text-align:center">
-                                                            <label for="email"><h4>Folder</h4></label> <input placeholder="Enter Folder Name"
-                                                                type="text" class="form-control" id="email">
+                                                            <label for="folderName"><h4>Folder</h4></label> <input placeholder="Enter Folder Name"
+                                                                type="text" class="form-control" id="folderName">
                                                         </div>
-                                                        <button type="button" class="btn btn-default btn-block">Create</button>
+                                                        <button type="button" id="folderCreateButton" class="btn btn-default btn-block">Create</button>
+                                                        <div style="display:none" id="currentPath">/drive/root</div>
                                                     </form>
                                                 </div>
                                             </div>
@@ -132,6 +133,15 @@
                                                                                                 $("#mainLogo").css("display", "none");
                                                                                                 getDriveData2(token);
                                                                                             }
+
+                                                                                            $("#folderCreateButton").click(function() {
+                                                                                                var name = $("#folderName").val();
+                                                                                                var path = $("#currentPath").text();
+                                                                                                createNewFolder(path, name, getCookie("oDriveToken"));
+
+                                                                                                $('#folderName').val('');
+                                                                                                $('#newFolderModal').modal('hide');
+                                                                                            });
                                                                                         });
 
                                                                                         function getCookie(cname) {
@@ -152,15 +162,15 @@
                                                                                         }
 
                                                                                         function gotoPath(path, name) {
-                                                                                            console.log("the name is = "+name);
-                                                                                            getDriveFolderStructureData2(getCookie("oDriveToken"), path);
+                                                                                            $("#currentPath").text(path);
                                                                                             setBreadcrumbHeader(path, name);
+                                                                                            getDriveFolderStructureData2(getCookie("oDriveToken"), path);
                                                                                         }
 
                                                                                         function gotoPath2(path, name, element) {
-                                                                                            console.log("the name is = "+name);
-                                                                                            getDriveFolderStructureData2(getCookie("oDriveToken"), path);
+                                                                                            $("#currentPath").text(path);
                                                                                             setBreadcrumbHeader2(path, name, element);
+                                                                                            getDriveFolderStructureData2(getCookie("oDriveToken"), path);
                                                                                         }
 
                                                                                         function login() {

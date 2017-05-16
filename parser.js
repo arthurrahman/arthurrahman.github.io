@@ -34,7 +34,6 @@ function parseDriveFolderHomeData2(data) {
         if("parentReference" in data.value[i])
             parentReference = data.value[i].parentReference.path;
         
-
         setTableEntry(
             name,
             createdDateTime,

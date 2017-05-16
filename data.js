@@ -96,7 +96,6 @@ function getDriveFolderStructureData(token) {
     success: function (data) {
       parseDriveFolderHomeData(data);
     }
-
   });
 }
 
@@ -111,7 +110,6 @@ function getDriveFolderStructureData2(token, path) {
     success: function (data) {
       parseDriveFolderHomeData2(data);
     }
-
   });
 }
 
@@ -134,7 +132,28 @@ function getDriveHomeData(token) {
       setMainDisplayPageData(displayData);
     }
   });
+}
 
+function createNewFolder(path, name, token) {
+  var baseUrl = "https://graph.microsoft.com/v1.0"+path+"/children";
+  var data = {
+      "name": name,
+      "folder": { }
+    };
+  //var baseUrl2 = "https://graph.microsoft.com/v1.0/drive/root/children";
+  console.log("before ajax");
+  $.ajax({
+    type: "POST",
+    url: baseUrl,
+    dataType: 'json',
+    contentType: "application/json; charset=utf-8",
+    data: JSON.stringify(data),
+    headers: { "Authorization": "Bearer " + token },
+    accept: "application/json;odata.metadata=none",
+    success: function (data) {
+      getDriveFolderStructureData2(token, path);
+    }
+  });
 }
 
 function formatBytes(bytes, decimals) {
